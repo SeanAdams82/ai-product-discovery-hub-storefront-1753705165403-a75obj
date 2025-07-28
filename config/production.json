@@ -1,0 +1,20 @@
+{
+  "database": {
+    "host": "${DB_HOST}",
+    "port": "${DB_PORT}",
+    "name": "${DB_NAME}"
+  },
+  "redis": {
+    "host": "${REDIS_HOST}",
+    "port": "${REDIS_PORT}"
+  },
+  "logging": {
+    "level": "info",
+    "console": false,
+    "file": "./logs/app.log"
+  },
+  "plugins": {
+    "hot_reload": false,
+    "auto_discover": false
+  }
+}
