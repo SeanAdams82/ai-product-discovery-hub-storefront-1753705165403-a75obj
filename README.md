@@ -1,41 +1,89 @@
-# AI Product Discovery Hub E-commerce Storefront
+# AI Product Discovery Hub
 
-A complete, responsive e-commerce website with advanced features:
+A modular, extensible AI-powered product discovery platform that enables seamless integration of new data sources, comparison engines, and recommendation algorithms.
 
 ## Features
-- Advanced search and filtering
-- Price comparison (enabled)
-- Responsive design
-- Shopping cart functionality
-- Legal compliance pages
-- Error handling and conflict resolution
-- Service worker for offline functionality
 
-## Deployment Options
+- 🔌 **Plugin Architecture**: Easy to extend with new data sources and algorithms
+- 🤖 **AI-Powered**: Built-in support for AI recommendations and comparisons
+- 🌐 **Multi-Source**: Search across multiple e-commerce platforms
+- ⚡ **High Performance**: Optimized for scalability and speed
+- 🔧 **Configurable**: Extensive configuration options
+- 📊 **Analytics Ready**: Built-in metrics and monitoring
 
-### GitHub Pages
-1. Go to repository Settings > Pages
-2. Select "Deploy from a branch"
-3. Choose "main" branch and "/ (root)" folder
-4. Your site will be available at: https://your-username.github.io/ai-product-discovery-hub-storefront-1753705165403-a75obj
+## Quick Start
 
-### Netlify
-1. Connect your GitHub account to Netlify
-2. Select this repository
-3. Deploy with default settings
+1. **Installation**
+   ```bash
+   npm install
+   ```
 
-### Vercel
-1. Import this repository in Vercel
-2. Deploy with default settings
+2. **Configuration**
+   Edit `config/platform.json` with your settings
 
-## Legal Compliance
-- GDPR compliant for EU visitors
-- Privacy Policy included
-- Terms of Service included
-- Cookie Policy included
-- Automatic cookie consent for EU visitors
+3. **Start the Platform**
+   ```bash
+   npm start
+   ```
 
-## Customization
-Edit the product data in script.js to add your own products.
+4. **Test API**
+   ```bash
+   curl -X POST http://localhost:3000/api/v1/search \
+     -H "Content-Type: application/json" \
+     -d '{"query": "laptop", "filters": {"category": "Electronics"}}'
+   ```
 
-Created with Pipedream - 2025-07-28T12:19:27.210Z
+## Architecture
+
+The platform is built around a plugin system with three main plugin types:
+
+- **Website Search Plugins**: Integration with e-commerce sites
+- **Comparison Engine Plugins**: Product comparison algorithms  
+- **AI Recommendation Plugins**: AI-powered recommendation systems
+
+## Plugin Development
+
+Create new plugins by extending the base plugin classes:
+
+```javascript
+import { WebsiteSearchPlugin } from './src/core/plugin-system/WebsiteSearchPlugin.js';
+
+export class MyStorePlugin extends WebsiteSearchPlugin {
+  // Implement required methods
+}
+```
+
+See [Plugin Development Guide](docs/PLUGIN_DEVELOPMENT.md) for details.
+
+## API Documentation
+
+### Search Products
+`POST /api/v1/search`
+
+### Compare Products  
+`POST /api/v1/comparison/compare`
+
+### Get Recommendations
+`POST /api/v1/recommendations/generate`
+
+See [API Documentation](docs/API.md) for complete reference.
+
+## Configuration
+
+Configure the platform through JSON files in the `config/` directory:
+
+- `platform.json`: Main configuration
+- `development.json`: Development settings
+- `production.json`: Production settings
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Implement your plugin or feature
+4. Add tests
+5. Submit a pull request
+
+## License
+
+MIT License - see LICENSE file for details.
