@@ -1,0 +1,19 @@
+{
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "name": "ai_discovery_dev"
+  },
+  "redis": {
+    "host": "localhost",
+    "port": 6379
+  },
+  "logging": {
+    "level": "debug",
+    "console": true
+  },
+  "plugins": {
+    "hot_reload": true,
+    "auto_discover": true
+  }
+}
