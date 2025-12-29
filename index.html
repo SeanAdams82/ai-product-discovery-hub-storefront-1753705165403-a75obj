@@ -43,7 +43,7 @@
         }
         
         .header-content {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             align-items: center;
@@ -85,16 +85,108 @@
         .nav-item:hover {
             color: white;
         }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
         
-        .container {
-            max-width: 1200px;
+        .main-container {
+            max-width: 1400px;
             margin: 0 auto;
+            display: flex;
+            gap: 2rem;
             padding: 2rem;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+            border: 1px solid var(--border-light);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.mobile-hidden {
+            transform: translateX(-100%);
+        }
+        
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .category-list {
+            list-style: none;
+        }
+        
+        .category-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .category-btn {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: none;
+            border: none;
+            text-align: left;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-gray);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .category-btn:hover {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, var(--primary-color), #4f46e5);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+        
+        .category-count {
+            font-size: 0.8rem;
+            background: rgba(255,255,255,0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .category-btn.active .category-count {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .content-area {
+            flex: 1;
+            min-width: 0;
         }
         
         .hero-section {
             text-align: center;
-            padding: 3rem 0;
+            padding: 3rem 2rem;
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
             border-radius: 20px;
             margin-bottom: 3rem;
@@ -113,36 +205,53 @@
             margin-bottom: 2rem;
         }
         
-        .products-section {
-            margin: 3rem 0;
+        .category-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .category-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-header {
+            margin-bottom: 2rem;
         }
         
         .section-title {
             font-size: 2rem;
             font-weight: bold;
-            text-align: center;
-            margin-bottom: 3rem;
             color: var(--text-dark);
             position: relative;
+            display: inline-block;
+            margin-bottom: 0.5rem;
         }
         
         .section-title::after {
             content: '';
             position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: -8px;
+            left: 0;
             width: 60px;
             height: 3px;
             background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
             border-radius: 2px;
         }
         
+        .section-description {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+        
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
         }
         
         .product-card {
@@ -152,6 +261,19 @@
             box-shadow: var(--shadow);
             transition: all 0.3s ease;
             border: 1px solid var(--border-light);
+            opacity: 0;
+            animation: slideInUp 0.5s ease forwards;
+        }
+
+        @keyframes slideInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
         
         .product-card:hover {
@@ -161,9 +283,18 @@
         
         .product-image {
             width: 100%;
-            height: 250px;
+            height: 220px;
             object-fit: cover;
             background: var(--bg-light);
+            transition: opacity 0.3s ease;
+        }
+
+        .product-image[data-loaded="false"] {
+            opacity: 0;
+        }
+
+        .product-image[data-loaded="true"] {
+            opacity: 1;
         }
         
         .product-content {
@@ -171,21 +302,27 @@
         }
         
         .product-title {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: bold;
             margin-bottom: 0.5rem;
             color: var(--text-dark);
             line-height: 1.4;
+            height: 2.8em;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
         
         .product-description {
             color: var(--text-gray);
             margin-bottom: 1rem;
             line-height: 1.5;
+            height: 4.5em;
+            overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
-            overflow: hidden;
         }
         
         .product-meta {
@@ -196,7 +333,7 @@
         }
         
         .product-price {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
             color: var(--primary-color);
         }
@@ -213,7 +350,7 @@
         
         .rating-text {
             color: var(--text-gray);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             margin-left: 0.5rem;
         }
         
@@ -233,14 +370,14 @@
             gap: 0.5rem;
             transition: all 0.3s ease;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            justify-content: center;
         }
         
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-color), #4f46e5);
             color: white;
             flex: 1;
-            justify-content: center;
         }
         
         .btn-primary:hover {
@@ -252,7 +389,6 @@
             background: var(--accent-color);
             color: white;
             flex: 1;
-            justify-content: center;
         }
         
         .btn-secondary:hover {
@@ -280,7 +416,7 @@
         }
         
         .footer-content {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 2rem;
             text-align: center;
@@ -323,6 +459,45 @@
             transform: translateY(-2px);
         }
         
+        .badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.4rem 0.8rem;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .product-card {
+            position: relative;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                order: -1;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .header-nav {
+                display: none;
+            }
+        }
+        
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -334,8 +509,9 @@
                 font-size: 2rem;
             }
             
-            .container {
+            .main-container {
                 padding: 1rem;
+                gap: 1rem;
             }
             
             .products-grid {
@@ -343,20 +519,40 @@
                 gap: 1.5rem;
             }
             
-            .product-actions {
-                flex-direction: column;
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                z-index: 1000;
+                overflow-y: auto;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                width: 280px;
+                background: white;
             }
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background: var(--accent-color);
-            color: white;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 999;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
         }
     </style>
 </head>
@@ -364,6 +560,9 @@
     <header class="header">
         <div class="header-content">
             <div class="logo-section">
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <img src="https://via.placeholder.com/200x60/6366f1/ffffff?text=Skoosty.com" alt="Skoosty.com" class="logo" onerror="this.style.display='none'">
                 <h1 class="store-name">Skoosty.com</h1>
             </div>
@@ -375,601 +574,761 @@
         </div>
     </header>
 
-    <div class="container">
-        <section class="hero-section">
-            <h2 class="hero-title">Premium Products, Curated for You</h2>
-            <p class="hero-subtitle">Discover amazing products with AI-powered recommendations and unbeatable prices</p>
-        </section>
+    <div class="sidebar-overlay" onclick="toggleMobileMenu()"></div>
 
-        <section class="products-section" id="products">
-            <h2 class="section-title">Featured Products</h2>
+    <div class="main-container">
+        <aside class="sidebar" id="sidebar">
+            <h3 class="sidebar-title">
+                <i class="fas fa-filter"></i>
+                Categories
+            </h3>
+            <ul class="category-list">
+                
+                    <li class="category-item">
+                        <button class="category-btn active" data-category="electronics" onclick="showCategory('electronics')">
+                            <span>Electronics</span>
+                            <span class="category-count">4</span>
+                        </button>
+                    </li>
+                
+                    <li class="category-item">
+                        <button class="category-btn " data-category="clothing" onclick="showCategory('clothing')">
+                            <span>Clothing & Fashion</span>
+                            <span class="category-count">3</span>
+                        </button>
+                    </li>
+                
+                    <li class="category-item">
+                        <button class="category-btn " data-category="books" onclick="showCategory('books')">
+                            <span>Books & Media</span>
+                            <span class="category-count">2</span>
+                        </button>
+                    </li>
+                
+                    <li class="category-item">
+                        <button class="category-btn " data-category="home" onclick="showCategory('home')">
+                            <span>Home & Garden</span>
+                            <span class="category-count">1</span>
+                        </button>
+                    </li>
+                
+                    <li class="category-item">
+                        <button class="category-btn " data-category="toys" onclick="showCategory('toys')">
+                            <span>Toys & Games</span>
+                            <span class="category-count">1</span>
+                        </button>
+                    </li>
+                
+                    <li class="category-item">
+                        <button class="category-btn " data-category="automotive" onclick="showCategory('automotive')">
+                            <span>Automotive</span>
+                            <span class="category-count">1</span>
+                        </button>
+                    </li>
+                
+                    <li class="category-item">
+                        <button class="category-btn " data-category="other" onclick="showCategory('other')">
+                            <span>Other</span>
+                            <span class="category-count">8</span>
+                        </button>
+                    </li>
+                
+            </ul>
+        </aside>
+
+        <main class="content-area">
+            <section class="hero-section">
+                <h2 class="hero-title">Premium Products, Curated for You</h2>
+                <p class="hero-subtitle">Discover amazing products with AI-powered recommendations and unbeatable prices</p>
+            </section>
+
             
+                <section class="category-section active" id="category-electronics">
+                    <div class="section-header">
+                        <h2 class="section-title">Electronics</h2>
+                        <p class="section-description">
+                            Latest tech gadgets and electronic devices
+                        </p>
+                    </div>
+                    
+                    
+                        <div class="products-grid">
+                            
+                                <div class="product-card" style="animation-delay: 0s">
+                                    
+                                    
+                                    <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-naturaltitanium-select?wid=470&hei=556&fmt=jpeg&qlt=99&.v=1692845702774" alt="iPhone 15 Pro" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">iPhone 15 Pro</h3>
+                                        
+                                        <p class="product-description">Pro. Beyond.</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$999</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.apple.com/iphone-15-pro/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="product-card" style="animation-delay: 0.1s">
+                                    
+                                    
+                                    <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp14-spacegray-select-202310?wid=904&hei=840&fmt=jpeg&qlt=90&.v=1697230830200" alt="MacBook Pro 14-inch" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">MacBook Pro 14-inch</h3>
+                                        
+                                        <p class="product-description">Mind-blowing. Head-turning.</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$1999</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.apple.com/macbook-pro-14-and-16/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="product-card" style="animation-delay: 0.2s">
+                                    
+                                    
+                                    <img src="https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6536/6536716_sd.jpg" alt="Samsung 65" QLED 4K Smart TV" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Samsung 65" QLED 4K Smart TV</h3>
+                                        
+                                        <p class="product-description">Brilliant picture quality with Quantum Dot technology</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$1299.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.bestbuy.com/site/samsung-65-class-qn85c-neo-qled-4k-uhd-smart-tizen-tv/6536716.p" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="product-card" style="animation-delay: 0.30000000000000004s">
+                                    
+                                    
+                                    <img src="https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6505/6505727_sd.jpg" alt="Sony WH-1000XM5 Wireless Headphones" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Sony WH-1000XM5 Wireless Headphones</h3>
+                                        
+                                        <p class="product-description">Industry-leading noise canceling with premium sound</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$399.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.bestbuy.com/site/sony-wh-1000xm5-wireless-noise-canceling-over-the-ear-headphones-black/6505727.p" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                </section>
             
-                <div class="products-grid">
+                <section class="category-section " id="category-clothing">
+                    <div class="section-header">
+                        <h2 class="section-title">Clothing & Fashion</h2>
+                        <p class="section-description">
+                            Trendy fashion and stylish apparel
+                        </p>
+                    </div>
                     
-                        <div class="product-card">
-                            <img src="https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/7c5678f4-c28d-4862-a8d9-56750f839f12/air-max-270-mens-shoes-KkLcGR.png" alt="Nike Air Max 270" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
+                    
+                        <div class="products-grid">
                             
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Nike Air Max 270</h3>
-                                
-                                <p class="product-description">The Nike Air Max 270 delivers visible cushioning</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$149.99</span>
+                                <div class="product-card" style="animation-delay: 0s">
                                     
                                     
+                                    <img src="https://lsco.scene7.com/is/image/lsco/005012000-front-pdp-lse?fmt=jpeg&qlt=70&resMode=bisharp&fit=crop,1&op_usm=0.6,0.6,8&wid=750&hei=964" alt="Levi's 501 Original Jeans" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Levi's 501 Original Jeans</h3>
+                                        
+                                        <p class="product-description">The original blue jean since 1873</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$79.5</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.levi.com/US/en_US/clothing/men/jeans/501-original-jeans/p/005010000" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
                                 </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.nike.com/t/air-max-270-mens-shoes-KkLcGR" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
+                            
+                                <div class="product-card" style="animation-delay: 0.1s">
                                     
                                     
+                                    <img src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GX3131_01_standard.jpg" alt="Adidas Ultraboost 22" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
                                     
+                                    <div class="product-content">
+                                        <h3 class="product-title">Adidas Ultraboost 22</h3>
+                                        
+                                        <p class="product-description">Our most responsive running shoe</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$189.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.adidas.com/us/ultraboost-22-shoes/GX3131.html" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            
+                                <div class="product-card" style="animation-delay: 0.2s">
+                                    
+                                    
+                                    <img src="https://www.sephora.com/productimages/sku/s2031391-main-zoom.jpg" alt="Olaplex Hair Perfector No. 3" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Olaplex Hair Perfector No. 3</h3>
+                                        
+                                        <p class="product-description">Weekly hair treatment that reduces breakage</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$30</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.sephora.com/product/hair-perfector-no-3-repairing-treatment-P428224" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
                         </div>
                     
-                        <div class="product-card">
-                            <img src="https://lsco.scene7.com/is/image/lsco/005012000-front-pdp-lse?fmt=jpeg&qlt=70&resMode=bisharp&fit=crop,1&op_usm=0.6,0.6,8&wid=750&hei=964" alt="Levi's 501 Original Jeans" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Levi's 501 Original Jeans</h3>
-                                
-                                <p class="product-description">The original blue jean since 1873</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$79.5</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.levi.com/US/en_US/clothing/men/jeans/501-original-jeans/p/005010000" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GX3131_01_standard.jpg" alt="Adidas Ultraboost 22" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Adidas Ultraboost 22</h3>
-                                
-                                <p class="product-description">Our most responsive running shoe</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$189.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.adidas.com/us/ultraboost-22-shoes/GX3131.html" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://images.lululemon.com/is/image/lululemon/LW5CXYS_028692_1?wid=1080&op_usm=0.5,2,10,0&fmt=webp&qlt=80,1&fit=constrain,0&op_sharpen=0&resMode=sharp2&iccEmbed=0&printRes=72" alt="Lululemon Align High-Rise Pant 25"" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Lululemon Align High-Rise Pant 25"</h3>
-                                
-                                <p class="product-description">Buttery-soft fabric for yoga and low-impact workouts</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$128</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://shop.lululemon.com/p/womens-leggings/Align-Pant-Full-Length/_/prod8780551" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-naturaltitanium-select?wid=470&hei=556&fmt=jpeg&qlt=99&.v=1692845702774" alt="iPhone 15 Pro" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">iPhone 15 Pro</h3>
-                                
-                                <p class="product-description">Pro. Beyond.</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$999</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.apple.com/iphone-15-pro/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp14-spacegray-select-202310?wid=904&hei=840&fmt=jpeg&qlt=90&.v=1697230830200" alt="MacBook Pro 14-inch" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">MacBook Pro 14-inch</h3>
-                                
-                                <p class="product-description">Mind-blowing. Head-turning.</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$1999</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.apple.com/macbook-pro-14-and-16/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6536/6536716_sd.jpg" alt="Samsung 65" QLED 4K Smart TV" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Samsung 65" QLED 4K Smart TV</h3>
-                                
-                                <p class="product-description">Brilliant picture quality with Quantum Dot technology</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$1299.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.bestbuy.com/site/samsung-65-class-qn85c-neo-qled-4k-uhd-smart-tizen-tv/6536716.p" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6505/6505727_sd.jpg" alt="Sony WH-1000XM5 Wireless Headphones" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Sony WH-1000XM5 Wireless Headphones</h3>
-                                
-                                <p class="product-description">Industry-leading noise canceling with premium sound</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$399.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.bestbuy.com/site/sony-wh-1000xm5-wireless-noise-canceling-over-the-ear-headphones-black/6505727.p" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://target.scene7.com/is/image/Target/GUEST_bb0d4034-70c9-4973-9d3d-8b8c5b5f1b5e?wid=488&hei=488&fmt=pjpeg" alt="CeraVe Foaming Facial Cleanser" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">CeraVe Foaming Facial Cleanser</h3>
-                                
-                                <p class="product-description">Gentle foaming cleanser for normal to oily skin</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$12.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.target.com/p/cerave-foaming-facial-cleanser-for-normal-to-oily-skin-12-fl-oz/-/A-13505538" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://www.sephora.com/productimages/sku/s2031391-main-zoom.jpg" alt="Olaplex Hair Perfector No. 3" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Olaplex Hair Perfector No. 3</h3>
-                                
-                                <p class="product-description">Weekly hair treatment that reduces breakage</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$30</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.sephora.com/product/hair-perfector-no-3-repairing-treatment-P428224" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://www.ikea.com/us/en/images/products/billy-bookcase-white__0644579_pe702514_s5.jpg" alt="IKEA BILLY Bookcase" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">IKEA BILLY Bookcase</h3>
-                                
-                                <p class="product-description">Classic bookcase with adjustable shelves</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$60</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.ikea.com/us/en/p/billy-bookcase-white-00263850/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://target.scene7.com/is/image/Target/GUEST_a5b8b2be-87b0-4c4d-9b34-f7d2b5d0e8f2?wid=488&hei=488&fmt=pjpeg" alt="Threshold Accent Chair" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Threshold Accent Chair</h3>
-                                
-                                <p class="product-description">Comfortable swivel accent chair</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$299.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.target.com/p/swivel-accent-chair-threshold/-/A-54649823" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://dyson-h.assetsadobe2.com/is/image/content/dam/dyson/products/air-treatment/purifier-fans/dyson-pure-cool/dyson-pure-cool-white-silver-gallery-1.jpg" alt="Dyson Pure Cool Air Purifier" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Dyson Pure Cool Air Purifier</h3>
-                                
-                                <p class="product-description">Captures 99.97% of particles as small as 0.3 microns</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$449.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.dyson.com/air-treatment/purifiers/dyson-pure-cool" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://yeti-web.imgix.net/65220263051?auto=format%2Ccompress&ixlib=php-3.3.0&w=700&h=700&fit=crop&crop=faces%2Cedges" alt="YETI Rambler 32oz Water Bottle" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">YETI Rambler 32oz Water Bottle</h3>
-                                
-                                <p class="product-description">Double-wall vacuum insulation keeps drinks cold</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$49.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.yeti.com/drinkware/bottles/21071500023.html" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://www.lego.com/cdn/cs/set/assets/blt7f9c7c7d7a0c8b66/21058.png" alt="LEGO Architecture Great Pyramid of Giza" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">LEGO Architecture Great Pyramid of Giza</h3>
-                                
-                                <p class="product-description">Build and display this detailed LEGO model</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$139.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.lego.com/en-us/product/great-pyramid-of-giza-21058" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://m.media-amazon.com/images/I/71nQJ8K8mVL._AC_SL1500_.jpg" alt="Elmer's School Glue Sticks" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Elmer's School Glue Sticks</h3>
-                                
-                                <p class="product-description">All-purpose school glue sticks, washable and safe</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$12.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.amazon.com/Elmers-Purpose-School-Sticks-6-Pack/dp/B00006IFAN" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://images-na.ssl-images-amazon.com/images/P/0439708184.01.L.jpg" alt="Harry Potter and the Sorcerer's Stone" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Harry Potter and the Sorcerer's Stone</h3>
-                                
-                                <p class="product-description">The beloved first book in the Harry Potter series</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$8.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.amazon.com/Harry-Potter-Sorcerers-Stone-Rowling/dp/0439708184" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://target.scene7.com/is/image/Target/GUEST_f7f8c0a1-7b7c-4e4d-9e2f-6a5b8c9d0e1f?wid=488&hei=488&fmt=pjpeg" alt="Crayola 64 Count Crayons" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Crayola 64 Count Crayons</h3>
-                                
-                                <p class="product-description">Classic 64-count crayons with built-in sharpener</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$4.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.target.com/p/crayola-crayons-64ct/-/A-13983024" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://cdn.shopify.com/s/files/1/0552/1401/9311/products/71UjKlD2vOL._AC_SL1024.jpg" alt="Funko Pop! Batman" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Funko Pop! Batman</h3>
-                                
-                                <p class="product-description">Batman Pop! vinyl figure from DC Comics</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$12.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.hottopic.com/product/funko-dc-comics-pop-heroes-batman-vinyl-figure/10244439.html" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                        <div class="product-card">
-                            <img src="https://assets.petco.com/petco/image/upload/f_auto,q_auto/2983568-center-1" alt="Purina Pro Plan Dog Food" class="product-image" onerror="this.src='https://via.placeholder.com/300x250/f3f4f6/9ca3af?text=No+Image'">
-                            
-                            <div class="product-content">
-                                
-                                
-                                <h3 class="product-title">Purina Pro Plan Dog Food</h3>
-                                
-                                <p class="product-description">High-quality nutrition for adult dogs</p>
-                                
-                                <div class="product-meta">
-                                    <span class="product-price">$79.99</span>
-                                    
-                                    
-                                </div>
-                                
-                                <div class="product-actions">
-                                    
-                                        <a href="https://www.petco.com/shop/en/petcostore/product/purina-pro-plan-adult-dry-dog-food" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            Buy Now
-                                        </a>
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    
-                </div>
+                </section>
             
-        </section>
+                <section class="category-section " id="category-books">
+                    <div class="section-header">
+                        <h2 class="section-title">Books & Media</h2>
+                        <p class="section-description">
+                            Books, media, and educational content
+                        </p>
+                    </div>
+                    
+                    
+                        <div class="products-grid">
+                            
+                                <div class="product-card" style="animation-delay: 0s">
+                                    
+                                    
+                                    <img src="https://www.ikea.com/us/en/images/products/billy-bookcase-white__0644579_pe702514_s5.jpg" alt="IKEA BILLY Bookcase" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">IKEA BILLY Bookcase</h3>
+                                        
+                                        <p class="product-description">Classic bookcase with adjustable shelves</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$60</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.ikea.com/us/en/p/billy-bookcase-white-00263850/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="product-card" style="animation-delay: 0.1s">
+                                    
+                                    
+                                    <img src="https://images-na.ssl-images-amazon.com/images/P/0439708184.01.L.jpg" alt="Harry Potter and the Sorcerer's Stone" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Harry Potter and the Sorcerer's Stone</h3>
+                                        
+                                        <p class="product-description">The beloved first book in the Harry Potter series</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$8.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.amazon.com/Harry-Potter-Sorcerers-Stone-Rowling/dp/0439708184" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                </section>
+            
+                <section class="category-section " id="category-home">
+                    <div class="section-header">
+                        <h2 class="section-title">Home & Garden</h2>
+                        <p class="section-description">
+                            Everything for your home and garden
+                        </p>
+                    </div>
+                    
+                    
+                        <div class="products-grid">
+                            
+                                <div class="product-card" style="animation-delay: 0s">
+                                    
+                                    
+                                    <img src="https://target.scene7.com/is/image/Target/GUEST_a5b8b2be-87b0-4c4d-9b34-f7d2b5d0e8f2?wid=488&hei=488&fmt=pjpeg" alt="Threshold Accent Chair" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Threshold Accent Chair</h3>
+                                        
+                                        <p class="product-description">Comfortable swivel accent chair</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$299.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.target.com/p/swivel-accent-chair-threshold/-/A-54649823" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                </section>
+            
+                <section class="category-section " id="category-toys">
+                    <div class="section-header">
+                        <h2 class="section-title">Toys & Games</h2>
+                        <p class="section-description">
+                            Fun toys and games for all ages
+                        </p>
+                    </div>
+                    
+                    
+                        <div class="products-grid">
+                            
+                                <div class="product-card" style="animation-delay: 0s">
+                                    
+                                    
+                                    <img src="https://www.lego.com/cdn/cs/set/assets/blt7f9c7c7d7a0c8b66/21058.png" alt="LEGO Architecture Great Pyramid of Giza" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">LEGO Architecture Great Pyramid of Giza</h3>
+                                        
+                                        <p class="product-description">Build and display this detailed LEGO model</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$139.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.lego.com/en-us/product/great-pyramid-of-giza-21058" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                </section>
+            
+                <section class="category-section " id="category-automotive">
+                    <div class="section-header">
+                        <h2 class="section-title">Automotive</h2>
+                        <p class="section-description">
+                            Auto parts and vehicle accessories
+                        </p>
+                    </div>
+                    
+                    
+                        <div class="products-grid">
+                            
+                                <div class="product-card" style="animation-delay: 0s">
+                                    
+                                    
+                                    <img src="https://target.scene7.com/is/image/Target/GUEST_bb0d4034-70c9-4973-9d3d-8b8c5b5f1b5e?wid=488&hei=488&fmt=pjpeg" alt="CeraVe Foaming Facial Cleanser" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">CeraVe Foaming Facial Cleanser</h3>
+                                        
+                                        <p class="product-description">Gentle foaming cleanser for normal to oily skin</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$12.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.target.com/p/cerave-foaming-facial-cleanser-for-normal-to-oily-skin-12-fl-oz/-/A-13505538" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                </section>
+            
+                <section class="category-section " id="category-other">
+                    <div class="section-header">
+                        <h2 class="section-title">Other</h2>
+                        <p class="section-description">
+                            Quality products across various categories
+                        </p>
+                    </div>
+                    
+                    
+                        <div class="products-grid">
+                            
+                                <div class="product-card" style="animation-delay: 0s">
+                                    
+                                    
+                                    <img src="https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/7c5678f4-c28d-4862-a8d9-56750f839f12/air-max-270-mens-shoes-KkLcGR.png" alt="Nike Air Max 270" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Nike Air Max 270</h3>
+                                        
+                                        <p class="product-description">The Nike Air Max 270 delivers visible cushioning</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$149.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.nike.com/t/air-max-270-mens-shoes-KkLcGR" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="product-card" style="animation-delay: 0.1s">
+                                    
+                                    
+                                    <img src="https://images.lululemon.com/is/image/lululemon/LW5CXYS_028692_1?wid=1080&op_usm=0.5,2,10,0&fmt=webp&qlt=80,1&fit=constrain,0&op_sharpen=0&resMode=sharp2&iccEmbed=0&printRes=72" alt="Lululemon Align High-Rise Pant 25"" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Lululemon Align High-Rise Pant 25"</h3>
+                                        
+                                        <p class="product-description">Buttery-soft fabric for yoga and low-impact workouts</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$128</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://shop.lululemon.com/p/womens-leggings/Align-Pant-Full-Length/_/prod8780551" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="product-card" style="animation-delay: 0.2s">
+                                    
+                                    
+                                    <img src="https://dyson-h.assetsadobe2.com/is/image/content/dam/dyson/products/air-treatment/purifier-fans/dyson-pure-cool/dyson-pure-cool-white-silver-gallery-1.jpg" alt="Dyson Pure Cool Air Purifier" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Dyson Pure Cool Air Purifier</h3>
+                                        
+                                        <p class="product-description">Captures 99.97% of particles as small as 0.3 microns</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$449.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.dyson.com/air-treatment/purifiers/dyson-pure-cool" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="product-card" style="animation-delay: 0.30000000000000004s">
+                                    
+                                    
+                                    <img src="https://yeti-web.imgix.net/65220263051?auto=format%2Ccompress&ixlib=php-3.3.0&w=700&h=700&fit=crop&crop=faces%2Cedges" alt="YETI Rambler 32oz Water Bottle" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">YETI Rambler 32oz Water Bottle</h3>
+                                        
+                                        <p class="product-description">Double-wall vacuum insulation keeps drinks cold</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$49.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.yeti.com/drinkware/bottles/21071500023.html" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="product-card" style="animation-delay: 0.4s">
+                                    
+                                    
+                                    <img src="https://m.media-amazon.com/images/I/71nQJ8K8mVL._AC_SL1500_.jpg" alt="Elmer's School Glue Sticks" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Elmer's School Glue Sticks</h3>
+                                        
+                                        <p class="product-description">All-purpose school glue sticks, washable and safe</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$12.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.amazon.com/Elmers-Purpose-School-Sticks-6-Pack/dp/B00006IFAN" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="product-card" style="animation-delay: 0.5s">
+                                    
+                                    
+                                    <img src="https://target.scene7.com/is/image/Target/GUEST_f7f8c0a1-7b7c-4e4d-9e2f-6a5b8c9d0e1f?wid=488&hei=488&fmt=pjpeg" alt="Crayola 64 Count Crayons" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Crayola 64 Count Crayons</h3>
+                                        
+                                        <p class="product-description">Classic 64-count crayons with built-in sharpener</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$4.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.target.com/p/crayola-crayons-64ct/-/A-13983024" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="product-card" style="animation-delay: 0.6000000000000001s">
+                                    
+                                    
+                                    <img src="https://cdn.shopify.com/s/files/1/0552/1401/9311/products/71UjKlD2vOL._AC_SL1024.jpg" alt="Funko Pop! Batman" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Funko Pop! Batman</h3>
+                                        
+                                        <p class="product-description">Batman Pop! vinyl figure from DC Comics</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$12.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.hottopic.com/product/funko-dc-comics-pop-heroes-batman-vinyl-figure/10244439.html" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="product-card" style="animation-delay: 0.7000000000000001s">
+                                    
+                                    
+                                    <img src="https://assets.petco.com/petco/image/upload/f_auto,q_auto/2983568-center-1" alt="Purina Pro Plan Dog Food" class="product-image" data-loaded="false" onload="this.setAttribute('data-loaded', 'true')" onerror="this.src='https://via.placeholder.com/280x220/f3f4f6/9ca3af?text=No+Image'; this.setAttribute('data-loaded', 'true');">
+                                    
+                                    <div class="product-content">
+                                        <h3 class="product-title">Purina Pro Plan Dog Food</h3>
+                                        
+                                        <p class="product-description">High-quality nutrition for adult dogs</p>
+                                        
+                                        <div class="product-meta">
+                                            <span class="product-price">$79.99</span>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="product-actions">
+                                            
+                                                <a href="https://www.petco.com/shop/en/petcostore/product/purina-pro-plan-adult-dry-dog-food" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    Buy Now
+                                                </a>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    
+                </section>
+            
+        </main>
     </div>
 
     <footer class="footer">
@@ -989,5 +1348,60 @@
             </p>
         </div>
     </footer>
+
+    <script>
+        function showCategory(categoryKey) {
+            // Hide all category sections
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected category section
+            const categorySection = document.getElementById('category-' + categoryKey);
+            if (categorySection) {
+                categorySection.classList.add('active');
+            }
+            
+            // Update active button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const activeButton = document.querySelector('[data-category="' + categoryKey + '"]');
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+
+            // Close mobile menu if open
+            if (window.innerWidth <= 768) {
+                toggleMobileMenu();
+            }
+        }
+
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show first category with products
+            const firstCategoryWithProducts = document.querySelector('.category-btn');
+            if (firstCategoryWithProducts) {
+                const categoryKey = firstCategoryWithProducts.getAttribute('data-category');
+                showCategory(categoryKey);
+            }
+
+            // Add smooth loading for images
+            document.querySelectorAll('.product-image[src]').forEach(img => {
+                if (img.complete) {
+                    img.setAttribute('data-loaded', 'true');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
